@@ -101,3 +101,6 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# weather forecast
+*varsel_time_for_time.xml
