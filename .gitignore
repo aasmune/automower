@@ -104,3 +104,4 @@ ENV/
 
 # weather forecast
 *varsel_time_for_time.xml
+*forecast_hour_for_hour.xml
