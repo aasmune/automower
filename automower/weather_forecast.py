@@ -48,14 +48,31 @@ class WeatherForecast(object):
         self._name = name
         self._url_adress = url_adress
         self._hours = []
-        self._file_name =  "_".join([self._name, self._url_adress.split("/")[-1]])
+        self._file_name =  "_".join([self._name, "forecast_hour_by_hour.xml"])
+
+    @property
+    def name(self):
+        return self._name
+
+    @property
+    def url_adress(self):
+        return self._url_adress
+
+    @property
+    def hours(self):
+        return self._hours
+
+    @property
+    def file_name(self):
+        return self._file_name
         
     def download_xml_file(self):
         """ Get xml file from www.yr.no"""
 
-        # If directory for xml files does not exist, create directory
-        if not os.path.exists("data"):
-            os.makedirs("data")
+        if not self.url_adress.endswith("varsel_time_for_time.xml") and \
+           not self.url_adress.endswith("forecast_hour_by_hour.xml"):
+            self._url_adress = ("/" if not self.url_adress.endswith("/") else "") \
+                              .join([self.url_adress, "forecast_hour_by_hour.xml"])
 
         # Download xml file
         err_code = subprocess.call(["wget", 
@@ -64,7 +81,7 @@ class WeatherForecast(object):
                                     self._file_name])
         if err_code:
             raise WeatherException("Error during downloading {}".format(self._url_adress))
-            
+
     def parse(self):
 
         try:
@@ -73,7 +90,7 @@ class WeatherForecast(object):
             logging.error(str(e))
             return
         
-        tree = ET.parse("sondre_eik_varsel_time_for_time.xml")
+        tree = ET.parse(self.file_name)
         root = tree.getroot()
 
         for attribute in root:
@@ -92,13 +109,17 @@ class WeatherForecast(object):
 
                         self._hours.append(HourlyWeatherForecast(timestamp[0], timestamp[1], forecast, average))
 
+        os.remove(self.file_name)
+
         
     def debug_weather_forecast(self):
         for hour in self._hours:
             print("Date {}, Hour {}, Forecast {}, Rain {}".format(hour.date, hour.start_hour, hour.forecast, hour.rain))
 
 if __name__ == "__main__":
-    weather = WeatherForecast("sondre_eik", "https://www.yr.no/place/Norway/Akershus/Nannestad/S%C3%B8ndre_Eik/varsel_time_for_time.xml")
+    weather = WeatherForecast("sondre_eik", "https://www.yr.no/place/Norway/Akershus/Nannestad/S%C3%B8ndre_Eik/")
     weather.parse()
     weather.debug_weather_forecast()
+
+#
 

@@ -1,4 +1,3 @@
-import pytest
 from automower.state_machine import AutomowerStateMachine
 
 class TestStateMachine(object):
