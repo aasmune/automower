@@ -3,6 +3,12 @@ from automower.state_machine import AutomowerStateMachine
 
 class TestStateMachine(object):
 
+    def test_that_passes(self):
+        assert True
+
+    def test_that_fails(self):
+        assert False
+
     def test_correct_states_after_initialiation(self):
 
         class TestAutomowerStateMachineInitialization(AutomowerStateMachine):
