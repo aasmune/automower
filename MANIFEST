@@ -4,4 +4,4 @@ automower/__init__.py
 automower/automower.py
 automower/controller.py
 automower/state_machine.py
-automower/weather.py
+automower/weather_forecast.py
