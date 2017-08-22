@@ -1,7 +1,11 @@
 import os
 import logging
 import subprocess
+import urllib.request
+from urllib.error import URLError
+import shutil
 import xml.etree.ElementTree as ET
+
 
 class HourlyWeatherForecast(object):
     # FORECAST_CLEAR_SKY = "CLEAR_SKY"
@@ -74,13 +78,17 @@ class WeatherForecast(object):
             self._url_adress = ("/" if not self.url_adress.endswith("/") else "") \
                               .join([self.url_adress, "forecast_hour_by_hour.xml"])
 
-        # Download xml file
-        err_code = subprocess.call(["wget", 
-                                    self._url_adress, 
-                                    "-O", 
-                                    self._file_name])
-        if err_code:
-            raise WeatherException("Error during downloading {}".format(self._url_adress))
+        # # Download xml file
+        # err_code = subprocess.call(["wget", 
+        #                             self._url_adress, 
+        #                             "-O", 
+        #                             self._file_name])
+
+        try:
+            with urllib.request.urlopen(self.url_adress) as response, open(self._file_name, 'wb') as out_file:
+                shutil.copyfileobj(response, out_file)
+        except ValueError as err:
+            raise WeatherException("Error during downloading {}: {}".format(self._url_adress, str(err)))
 
     def parse(self):
 

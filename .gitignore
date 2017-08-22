@@ -103,5 +103,5 @@ ENV/
 .mypy_cache/
 
 # weather forecast
+*forecast_hour_by_hour.xml
 *varsel_time_for_time.xml
-*forecast_hour_for_hour.xml
