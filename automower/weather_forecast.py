@@ -113,11 +113,14 @@ class WeatherForecast(object):
                         # [2017-08-19, 23:00:00]
                         timestamp = time.attrib["from"].split("T")
                         forecast = time[0].attrib["name"]
-                        average = time[1].attrib["value"]
+                        average = float(time[1].attrib["value"])
 
                         self._hours.append(HourlyWeatherForecast(timestamp[0], timestamp[1], forecast, average))
 
         os.remove(self.file_name)
+
+    def get_latest_weather_data(self):
+        return self.hours[0]
 
         
     def debug_weather_forecast(self):
